@@ -1,4 +1,4 @@
-﻿using CounterStrikeSharp.API;
+using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Utils;
 using CounterStrikeSharp.API.Core;
@@ -20,7 +20,7 @@ public class ChatProcessor : BasePlugin
     public override string ModuleAuthor => "TouchMe";
     public override string ModuleDescription => "API for chat manipulation";
 
-    private readonly PluginCapability<IChatProcessor> _pluginCapability = new("ChatProcessor");
+    private readonly PluginCapability<IChatProcessor> _pluginCapability = new("ChatProcessor:api");
 
     private ChatProcessorApi ChatProcessorApi = null!;
 
@@ -141,6 +141,20 @@ public class ChatProcessor : BasePlugin
             recipient.PrintToChat(ColorTags.Replace(finalMessage, recipient.Team));
             recipient.PrintToConsole(ColorTags.Remove(finalMessage));
         }
+
+        // Log chat message
+        string teamName = player.Team switch
+        {
+            CsTeam.Terrorist => "TERRORIST",
+            CsTeam.CounterTerrorist => "CT",
+            CsTeam.Spectator => "SPECTATOR",
+            _ => "UNASSIGNED"
+        };
+        string steamId = player.AuthorizedSteamID?.SteamId64 != null ? $"[U:1:{player.AuthorizedSteamID.SteamId64}]" : "BOT";
+        string timestamp = DateTime.Now.ToString("MM/dd/yyyy - HH:mm:ss");
+
+        // L 01/23/2026 - 21:55:12: "Kriaxette   <0><[U:1:58669676]><TERRORIST>" say "test"
+        Console.WriteLine($"L {timestamp}: \"{player.PlayerName} <{player.Slot}><{steamId}><{teamName}>\" {command} \"{message}\"");
 
         // Trigger post-message processing
         ChatProcessorApi.TriggerMessagePost(player, senderName, message, recipients, flags);

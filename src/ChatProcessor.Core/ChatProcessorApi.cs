@@ -46,7 +46,8 @@ public class ChatProcessorApi : IChatProcessor
 
             switch (handler.Invoke(sender, ref name, ref message, ref recipients, ref flags))
             {
-                case HookResult.Stop: return;
+                case HookResult.Stop: 
+                    return;
 
                 case HookResult.Continue:
                 {
