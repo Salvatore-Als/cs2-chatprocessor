@@ -1,4 +1,5 @@
-﻿using CounterStrikeSharp.API.Core;
+using System;
+using CounterStrikeSharp.API.Core;
 
 namespace ChatProcessor.API;
 
@@ -7,33 +8,30 @@ namespace ChatProcessor.API;
 /// </summary>
 public interface IChatProcessor
 {
-    delegate HookResult MessageCallbackPre(CCSPlayerController sender, ref string name, ref string message,
-        ref List<CCSPlayerController> recipients, ref ChatFlags flags);
-
-    delegate void MessageCallbackPost(CCSPlayerController sender, string name, string message,
-                                      List<CCSPlayerController> recipients, ChatFlags flags);
+    delegate HookResult MessageCallbackPre(CCSPlayerController sender, ref string name, ref string message, ref List<CCSPlayerController> recipients, ref ChatFlags flags);
+    delegate void MessageCallbackPost(CCSPlayerController sender, string name, string message, List<CCSPlayerController> recipients, ChatFlags flags);
 
     /// <summary>
-    /// Registers a chat event handler.
+    /// Registers a Pre chat event handler.
     /// </summary>
     /// <param name="handler">The event handler to register.</param>
-    void RegisterHandlerPre(MessageCallbackPre handler);
+    void RegisterPre(MessageCallbackPre handler);
 
     /// <summary>
-    /// De-registers a chat event handler.
-    /// </summary>
-    /// <param name="handler">The event handler to deregister.</param>
-    void DeregisterHandlerPre(MessageCallbackPre handler);
-
-    /// <summary>
-    /// Registers a chat event handler.
+    /// Registers a Post chat event handler.
     /// </summary>
     /// <param name="handler">The event handler to register.</param>
-    void RegisterHandlerPost(MessageCallbackPost handler);
+    void RegisterPost(MessageCallbackPost handler);
 
     /// <summary>
-    /// De-registers a chat event handler.
+    /// De-registers a Pre chat event handler.
     /// </summary>
     /// <param name="handler">The event handler to deregister.</param>
-    void DeregisterHandlerPost(MessageCallbackPost handler);
+    void DeregisterPre(MessageCallbackPre handler);
+
+    /// <summary>
+    /// De-registers a Post chat event handler.
+    /// </summary>
+    /// <param name="handler">The event handler to deregister.</param>
+    void DeregisterPost(MessageCallbackPost handler);
 }
